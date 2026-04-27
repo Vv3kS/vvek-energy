@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hope Energy — Quotation Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-dark: #1a4a1e;
+  --green: #2e7d32;
+  --green-mid: #388e3c;
+  --green-light: #4caf50;
+  --yellow: #f9a825;
+  --yellow-light: #ffcc02;
+  --bg: #0d1f0e;
+  --surface: #112413;
+  --surface2: #1a3a1c;
+  --border: rgba(76,175,80,0.18);
+  --text: #e8f5e9;
+  --muted: #81c784;
+  --white: #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BG texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(46,125,50,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(249,168,37,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative;
+  z-index: 10;
+  padding: 20px 24px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(17,36,19,0.9);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-sun {
+  width: 46px; height: 46px;
+  background: conic-gradient(from 0deg, var(--yellow), var(--yellow-light), var(--yellow));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 0 24px rgba(249,168,37,0.4), 0 0 48px rgba(249,168,37,0.15);
+  animation: pulse-sun 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-sun {
+  0%, 100% { box-shadow: 0 0 24px rgba(249,168,37,0.4), 0 0 48px rgba(249,168,37,0.15); }
+  50% { box-shadow: 0 0 32px rgba(249,168,37,0.6), 0 0 64px rgba(249,168,37,0.25); }
+}
+
+.logo-text h1 {
+  font-size: 18px; font-weight: 800;
+  color: var(--white); letter-spacing: 0.5px;
+  line-height: 1;
+}
+.logo-text p {
+  font-size: 11px; color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  margin-top: 3px; letter-spacing: 0.5px;
+}
+
+/* ── MAIN LAYOUT ── */
+.main {
+  position: relative; z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+/* ── SECTION TITLE ── */
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--yellow);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: var(--yellow);
+  opacity: 0.5;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  transition: border-color 0.3s;
+}
+.card:focus-within {
+  border-color: rgba(76,175,80,0.4);
+}
+
+.card-head {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface2);
+}
+.card-head .icon {
+  width: 32px; height: 32px;
+  background: rgba(46,125,50,0.3);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.card-head h2 {
+  font-size: 13px; font-weight: 600;
+  color: var(--green-light); letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.card-body {
+  padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 13px;
+}
+
+/* ── FIELD ── */
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 11px; font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.4px;
+}
+.field input, .field select {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(76,175,80,0.2);
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 15px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  width: 100%;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--green-light);
+  background: rgba(76,175,80,0.07);
+  box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+}
+.field input::placeholder { color: rgba(129,199,132,0.35); }
+.field .hint {
+  font-size: 10.5px; color: rgba(129,199,132,0.5);
+  font-family: 'Space Mono', monospace;
+}
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+/* ── SELECT ARROW ── */
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234caf50' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+.field select option { background: #1a3a1c; color: var(--text); }
+
+/* ── PRICE BREAKDOWN ── */
+.breakdown {
+  background: rgba(249,168,37,0.04);
+  border: 1px solid rgba(249,168,37,0.15);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.breakdown-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; color: var(--yellow);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.brow {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(76,175,80,0.08);
+  font-size: 13px;
+}
+.brow:last-child { border-bottom: none; }
+.brow .blabel { color: var(--muted); }
+.brow .bval { font-weight: 600; color: var(--text); font-family: 'Space Mono', monospace; font-size: 12px; }
+.brow.highlight .bval { color: var(--yellow-light); font-size: 14px; }
+.brow.red .bval { color: #ef9a9a; }
+.brow.sep { border-top: 1px solid rgba(76,175,80,0.15); margin-top: 4px; padding-top: 8px; }
+
+/* ── DATE ROW ── */
+.date-row { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; }
+
+/* ── GENERATE BUTTON ── */
+.btn-wrap { margin-top: 8px; }
+
+.btn-generate {
+  width: 100%;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 17px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px; font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 4px 20px rgba(46,125,50,0.35), 0 1px 0 rgba(255,255,255,0.1) inset;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-generate::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+  pointer-events: none;
+}
+.btn-generate:active { transform: scale(0.97); }
+.btn-generate:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-icon { font-size: 20px; }
+
+/* ── STATUS ── */
+.status {
+  display: none;
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+.status.loading {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(46,125,50,0.15);
+  border: 1px solid rgba(76,175,80,0.2);
+  color: var(--green-light);
+}
+.status.success {
+  display: block;
+  background: rgba(249,168,37,0.1);
+  border: 1px solid rgba(249,168,37,0.25);
+  color: var(--yellow-light);
+}
+.status.error {
+  display: block;
+  background: rgba(244,67,54,0.1);
+  border: 1px solid rgba(244,67,54,0.2);
+  color: #ef9a9a;
+}
+
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(76,175,80,0.3);
+  border-top-color: var(--green-light);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── DOWNLOAD LINK ── */
+.download-link {
+  display: none;
+  margin-top: 12px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(249,168,37,0.12), rgba(249,168,37,0.06));
+  border: 1px solid rgba(249,168,37,0.3);
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--yellow-light);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  transition: background 0.2s;
+}
+.download-link:hover { background: rgba(249,168,37,0.2); }
+.download-link.show { display: block; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 11px;
+  color: rgba(129,199,132,0.3);
+  font-family: 'Space Mono', monospace;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-sun">☀️</div>
+  <div class="logo-text">
+    <h1>HOPE ENERGY</h1>
+    <p>QUOTATION GENERATOR · WAAREE PARTNER</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Client Details -->
+  <div class="section-label">Client Details</div>
+  <div class="card">
+    <div class="card-head">
+      <div class="icon">👤</div>
+      <h2>Client Information</h2>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>Client Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Shushma Tripathi">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Location</label>
+          <input type="text" id="location" placeholder="e.g. Durg">
+        </div>
+        <div class="field">
+          <label>Reference No.</label>
+          <input type="text" id="reference" placeholder="e.g. 3KW">
+          <span class="hint">PM / {ref} / {kw}KW</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date -->
+  <div class="section-label">Proposal Date</div>
+  <div class="card">
+    <div class="card-head">
+      <div class="icon">📅</div>
+      <h2>Date</h2>
+    </div>
+    <div class="card-body">
+      <div class="date-row">
+        <div class="field">
+          <label>Day</label>
+          <input type="number" id="day" value="24" min="1" max="31">
+        </div>
+        <div class="field">
+          <label>Month</label>
+          <select id="month">
+            <option>January</option><option>February</option>
+            <option value="March" selected>March</option>
+            <option>April</option><option>May</option><option>June</option>
+            <option>July</option><option>August</option><option>September</option>
+            <option>October</option><option>November</option><option>December</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Year</label>
+          <input type="number" id="year" value="2026" min="2024" max="2030">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Details -->
+  <div class="section-label">System Details</div>
+  <div class="card">
+    <div class="card-head">
+      <div class="icon">⚡</div>
+      <h2>Solar System</h2>
+    </div>
+    <div class="card-body">
+      <div class="row2">
+        <div class="field">
+          <label>Kilowatt (KW)</label>
+          <input type="number" id="kilowatt" placeholder="e.g. 3" min="1" step="0.5" oninput="autoCalcPanels()">
+        </div>
+        <div class="field">
+          <label>Watt Peak (Wp)</label>
+          <input type="number" id="wattPeak" value="530" min="100" step="5" oninput="autoCalcPanels()">
+          <span class="hint">Default: 530 Wp</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>No. of Panels <span style="color:rgba(76,175,80,0.5);font-size:10px">(auto / override)</span></label>
+        <input type="number" id="panels" placeholder="Auto" min="1" oninput="panelManual=true">
+        <span class="hint">Formula: (KW × 1000) ÷ Wp</span>
+      </div>
+      <div class="field">
+        <label>Inverter Size</label>
+        <select id="inverter">
+          <option value="3">3 KVA (Single Phase)</option>
+          <option value="5" selected>5 KVA (Single Phase)</option>
+          <option value="5">5 KVA (Three Phase)</option>
+          <option value="10">10 KW</option>
+          <option value="15">15 KW</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Structure Type</label>
+        <input type="text" id="structure" value="Roof Mounting Structure Height (6ft-4ft)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="section-label">Pricing</div>
+  <div class="card">
+    <div class="card-head">
+      <div class="icon">💰</div>
+      <h2>Commercial Offer</h2>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>Grand Total — Final Price (₹)</label>
+        <input type="number" id="grandTotal" placeholder="e.g. 210000" oninput="updateBreakdown()">
+        <span class="hint">Project Cost & GST auto-calculated</span>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-title">📊 Live Breakdown</div>
+        <div class="brow"><span class="blabel">Project Cost (÷ 1.089)</span><span class="bval" id="b-proj">₹ —</span></div>
+        <div class="brow"><span class="blabel">GST @ 8.9%</span><span class="bval" id="b-gst">₹ —</span></div>
+        <div class="brow highlight sep"><span class="blabel">Grand Total</span><span class="bval" id="b-grand">₹ —</span></div>
+        <div class="brow red"><span class="blabel">MNRE Subsidy</span><span class="bval">− ₹ 1,08,000</span></div>
+        <div class="brow highlight"><span class="blabel">Effective Cost</span><span class="bval" id="b-eff">₹ —</span></div>
+        <div class="brow sep"><span class="blabel">Panels</span><span class="bval" id="b-panels">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generate -->
+  <div class="btn-wrap">
+    <button class="btn-generate" id="genBtn" onclick="generateQuotation()">
+      <span class="btn-icon">☀️</span>
+      GENERATE QUOTATION PDF
+    </button>
+  </div>
+
+  <div class="status" id="status"></div>
+  <a class="download-link" id="downloadLink" href="#" download>⬇️ &nbsp;PDF Download Karo</a>
+
+  <div class="footer">Hope Energy · Waaree Authorized Channel Partner · Raipur, CG</div>
+
+</div><!-- /main -->
+
+<script>
+const SUBSIDY = 108000;
+let panelManual = false;
+
+const MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+
+function fmtINR(n) {
+  n = Math.round(n);
+  let s = n.toString();
+  if (s.length <= 3) return s;
+  let result = s.slice(-3);
+  s = s.slice(0, -3);
+  while (s.length > 2) {
+    result = s.slice(-2) + ',' + result;
+    s = s.slice(0, -2);
+  }
+  if (s) result = s + ',' + result;
+  return result;
+}
+
+function autoCalcPanels() {
+  const kw = parseFloat(document.getElementById('kilowatt').value) || 0;
+  const wp = parseFloat(document.getElementById('wattPeak').value) || 530;
+  if (!panelManual && kw > 0 && wp > 0) {
+    document.getElementById('panels').value = Math.ceil((kw * 1000) / wp);
+  }
+  updateBreakdown();
+}
+
+function updateBreakdown() {
+  const fp = parseFloat(document.getElementById('grandTotal').value) || 0;
+  const panels = document.getElementById('panels').value;
+  
+  if (fp > 0) {
+    const proj = Math.round(fp / 1.089);
+    const gst  = fp - proj;
+    const eff  = fp - SUBSIDY;
+    document.getElementById('b-proj').textContent  = '₹ ' + fmtINR(proj);
+    document.getElementById('b-gst').textContent   = '₹ ' + fmtINR(gst);
+    document.getElementById('b-grand').textContent = '₹ ' + fmtINR(fp);
+    document.getElementById('b-eff').textContent   = '₹ ' + fmtINR(eff);
+  } else {
+    ['b-proj','b-gst','b-grand','b-eff'].forEach(id =>
+      document.getElementById(id).textContent = '₹ —');
+  }
+  document.getElementById('b-panels').textContent = panels ? panels + ' Nos' : '—';
+}
+
+function showStatus(type, msg) {
+  const el = document.getElementById('status');
+  el.className = 'status ' + type;
+  if (type === 'loading') {
+    el.innerHTML = `<div class="spinner"></div>${msg}`;
+  } else {
+    el.textContent = msg;
+  }
+  el.style.display = type === 'loading' ? 'flex' : 'block';
+}
+
+function hideStatus() {
+  document.getElementById('status').style.display = 'none';
+}
+
+async function generateQuotation() {
+  const name      = document.getElementById('clientName').value.trim();
+  const location  = document.getElementById('location').value.trim();
+  const reference = document.getElementById('reference').value.trim();
+  const kw        = document.getElementById('kilowatt').value.trim();
+  const wp        = document.getElementById('wattPeak').value.trim();
+  const panels    = document.getElementById('panels').value.trim();
+  const inverter  = document.getElementById('inverter').value.trim();
+  const structure = document.getElementById('structure').value.trim();
+  const grandTotal= parseFloat(document.getElementById('grandTotal').value) || 0;
+  const day       = document.getElementById('day').value.trim();
+  const month     = document.getElementById('month').value;
+  const year      = document.getElementById('year').value.trim();
+
+  if (!name || !location || !kw || !grandTotal) {
+    showStatus('error', '⚠️ Client Name, Location, KW, aur Grand Total zaroori hai!');
+    return;
+  }
+
+  const calcPanels = panels || Math.ceil((parseFloat(kw) * 1000) / (parseFloat(wp) || 530));
+
+  const payload = {
+    reference:    reference || kw + 'KW',
+    client_name:  name,
+    location:     location,
+    kilowatt:     kw,
+    inverter_kva: inverter,
+    watt_peak:    wp || '530',
+    no_of_panels: calcPanels,
+    structure:    structure,
+    grand_total:  grandTotal,
+    day:          day,
+    month:        month,
+    year:         year
+  };
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  document.getElementById('downloadLink').className = 'download-link';
+  showStatus('loading', 'PDF ban raha hai… thoda wait karo');
+
+  try {
+    const response = await fetch('/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(err);
+    }
+
+    // Get the PDF blob
+    const blob = await response.blob();
+    const url  = URL.createObjectURL(blob);
+    const safeName = name.replace(/\s+/g, '_').toUpperCase();
+    const filename = `${safeName}_${kw}KW.pdf`;
+
+    const dlLink = document.getElementById('downloadLink');
+    dlLink.href = url;
+    dlLink.download = filename;
+    dlLink.textContent = `⬇️  ${filename} — Download Karo`;
+    dlLink.className = 'download-link show';
+    dlLink.click(); // auto-download
+
+    hideStatus();
+    showStatus('success', `✅ PDF ready! "${filename}" download ho raha hai.`);
+  } catch (err) {
+    showStatus('error', '❌ Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Panel manual override detection
+document.getElementById('panels').addEventListener('input', function() {
+  if (this.value !== '') panelManual = true;
+  else panelManual = false;
+  updateBreakdown();
+});
+
+// Initial
+updateBreakdown();
+</script>
+</body>
+</html>
